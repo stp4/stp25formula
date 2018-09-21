@@ -1,2 +1,2 @@
 # stp25formula
-Firmula Interface
+Formula Interface
