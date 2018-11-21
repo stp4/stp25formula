@@ -1,13 +1,12 @@
-
-
 #' @rdname formula_helper
 #' @description check_data: prueft ob variablen vorhanden sind bzw ob Faelle NA sind.
 #' @param  vars in check_data
 #' @return check_data: Logical und wen FALSE ueber cat die  Objekt die falsch sind
 #' @examples
 #'
-#' check_data(varana, c("m1", "m2") )
-#' check_data(varana, c("m1", "sex") )
+#' dat<- fata.frame(sex=1:2, m1=1:2, m3=1:2)
+#' check_data(dat, c("m1", "m2") )
+#' check_data(dat, c("m1", "sex") )
 #'
 #
 check_data <- function (data, 
@@ -39,9 +38,6 @@ check_data <- function (data,
 }
 
 
-
-
-
 #' @rdname formula_helper
 #' @description makeNamesNum: aus Nummern die Namen extrahieren
 #' @param  data Daten als data.frame
@@ -50,8 +46,8 @@ check_data <- function (data,
 #' @return   string( )
 #' @examples
 #'
-#' measure <- c("geschl", "1" , "3:5", 1)
-#'  makeNamesNum(measure,  data=varana)
+#'   measure <- c("geschl", "1" , "3:5", 1)
+#'   stp25formula:::makeNamesNum(measure,  data=dat)
 #'
 makeNamesNum <- function(measure,
                          data,
@@ -79,11 +75,27 @@ makeNamesNum <- function(measure,
 }
 
 
+#' class  
+#'
+#' Arbeiten mit mehrfachen Classen.
+#'
+#' @param data data.frame
+#'
+#' @noRd
 get_classes <-
-  function(data)
+  function(data) {
     sapply(data, function(x)
       setdiff(class(x), "labelled"))
+  }
 
+#' stp25_stat_methode  
+#'
+#' in Tabelle verwendet
+#'
+#' @param x string
+#' @param mymet Meine Methoden
+#'
+#' @noRd
 stp25_stat_methode <- function(x,
                                mymet = c("freq",
                                          "mean",

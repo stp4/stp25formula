@@ -1,24 +1,28 @@
 Package: stp25formula
 Type: Package
-Title: Formulas
-Version: 0.1.0
-Date: 2018-04-13
-Author: Wolfgang Peter
-Maintainer: Wolfgang Peter <w.peter@statistik-peter.at>
-Description: Formeln und Daten Aufbereiten  
-License: What license is it under?
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.0
-Imports: 
-  stp25aggregate,
-  stp25rndr,
-  stringr,
-  stpvers,
+Title: Formulas Transformation Functions
+Version: 0.2.1
+Date: 2018-11-15
+Authors@R: person("Wolfgang", "Peter", role = c("aut", "cre"), email = "w.peter@tirol.com")
+Maintainer: Wolfgang Peter <w.peter@tirol.com>
+Description: Collection of miscellaneous utility functions, supporting formula transformation tasks.
+License: GPL-3
+Depends:
+  R (>= 3.2),
+  stats,
+  utils
+Imports:
   Formula,
   tibble,
-  lazyeval
-Suggests: 
-  stats, 
-  magrittr,
+  stringr (>= 1.2.0),
+  stp25aggregate,
+  stp25output,
+  stp25rndr
+Suggests:
+  knitr,
+  rmarkdown,
   testthat
+URL: https://github.com/stp4/stp25formula
+RoxygenNote: 6.1.1
+VignetteBuilder: knitr

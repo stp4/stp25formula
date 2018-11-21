@@ -38,14 +38,14 @@ prepare_data2 <- function(...){
 #' @param groups Block codition
 #' @export
 #' @examples
-#'
-#' prepare_data2(~ m1 + m2 + m3 + m4, varana)
-#' prepare_data2(~ log(m1) + m2 + m3 + m4, varana)
-#' prepare_data2(~ m1[1] + m2 + m3 + m4, varana)
-#' prepare_data2(~ m1[1] + m2 + m3[4,median] + m4, varana)
-#'
-#'
-#'
+#' 
+#' dat<- data.frame(sex=1:2, m1=1:2,m2=1:2, m3=1:2, m4=1:2, m5=1:2, m6=1:2, geschl=1:2)
+#' 
+#' prepare_data2(~ m1 + m2 + m3 + m4, dat)
+#' prepare_data2(~ log(m1) + m2 + m3 + m4, dat)
+#' prepare_data2(~ m1[1] + m2 + m3 + m4, dat)
+#' prepare_data2(~ m1[1] + m2 + m3[4,median] + m4, dat)
+
 prepare_data2.formula <-
   function(x,
            data,
@@ -206,13 +206,13 @@ prepare_data2.formula <-
 #' @export
 #' @examples
 #'
-#' prepare_data2(varana, m1, m2, m3, m4)
-#' prepare_data2(varana, 4:7)
-#' prepare_data2(varana, m1[1], m2, m3, m4)
-#' prepare_data2(varana, m1[1], m2, m3[4,median], m4)
-#' prepare_data2(varana, m1 , m2, m3=median, m4)
-#' prepare_data2(varana, m1, m2, m3 , m4, by =  ~ geschl)
-#' prepare_data2(varana, m1[4, median], m2, m3 , m4[5], by =  ~ geschl)
+#' prepare_data2(dat, m1, m2, m3, m4)
+#' prepare_data2(dat, 4:7)
+#' prepare_data2(dat, m1[1], m2, m3, m4)
+#' prepare_data2(dat, m1[1], m2, m3[4,median], m4)
+#' prepare_data2(dat, m1 , m2, m3=median, m4)
+#' prepare_data2(dat, m1, m2, m3 , m4, by =  ~ geschl)
+#' prepare_data2(dat, m1[4, median], m2, m3 , m4[5], by =  ~ geschl)
 #'
 #'
 prepare_data2.data.frame <- function(data,
@@ -249,15 +249,12 @@ prepare_data2.data.frame <- function(data,
   measure <- makeNamesNum(measure, data)
   
   if (length(measure) == 0) {
-    # prepare_data2(varana)
     measure.vars <- names(data)
   }
   else if (any(grepl("\\[", measure))) {
-    # prepare_data2(varana, m1[4,median])
     return(prepare_data2.formula(to_formula(measure, by, condition.vars), data))
   }
   else {
-    # prepare_data2(varana, m1=median, m2, m3)
     if (length(names(measure)) != 0) {
       measure.vars <-
         ifelse(names(measure) == "", measure, names(measure))

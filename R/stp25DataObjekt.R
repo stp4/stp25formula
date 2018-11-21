@@ -1,7 +1,19 @@
-#' @rdname formula_helper
-#' @description stp25DataObjekt Ueberprüft die Objektstrucktur also ob
+#' stp25DataObjekt
+#'
+#' Ueberprüft die Objektstrucktur also ob
 #'  measure usw vorhanden ist.
 #'  Die Uebergebenen Daten werden falls notwendig transformiert.
+#'  
+#'
+#'
+#' @param data data.frame (bereinigt)
+#' @param measure.vars,group.vars,condition.vars String
+#' @param formula,by neu aus den Daten erstellt (.~)
+#' @param measure,digits aus Formula und Daten erstellt
+#' @param row_name,col_name labels
+#' @param measure.class,group.class,condition.class abweichend von measure die Classen
+#' 
+#' @noRd
 stp25DataObjekt <- function(data = NULL,
                             measure.vars = NULL,
                             group.vars = NULL,
@@ -15,6 +27,7 @@ stp25DataObjekt <- function(data = NULL,
                             group.class = NULL,
                             condition.class = NULL,
                             digits = NULL) {
+  
   if (!is.null(measure.vars)) {
     if (is.null(measure.class))
       measure.class <- get_classes(data[measure.vars])
@@ -25,8 +38,8 @@ stp25DataObjekt <- function(data = NULL,
     if (is.null(digits))
       digits <- ifelse(
         measure == "factor",
-        stp25rndr:::default_stp25("digits", "prozent"),
-        stp25rndr:::default_stp25("digits", "mittelwert")
+        stp25rndr::default_stp25("digits", "prozent"),
+        stp25rndr::default_stp25("digits", "mittelwert")
       )
   }
   
@@ -102,10 +115,12 @@ stp25DataObjekt <- function(data = NULL,
   res
 }
 
-#' @rdname formula_helper
-#' @description Print Methode
+
+#' Print Methode
+#' 
 #' @export
-print.stp25data <- function(x) {
+#' @noRd
+print.stp25data <- function(x, ...) {
   cat("\nformula: ")
   print(x$formula)
   cat("\nmeasure.vars: ", paste(x$measure.vars, collapse = ", "))

@@ -1,18 +1,17 @@
 #' @rdname formula_helper
-#' @description makeFormula: Formel erstellen
-#' @param  measurevar Variable  in makeFormula
-#' @param groupvars Variable in makeFormula
-#' @return makeFormula: formula - Objekt
+#' @description make_formula: Formel erstellen in \code{berechne_all(...)} verwendet. 
+#' Hier wird \code{cbind(a,b,c)~g} ausgegebeb.
+#' @param  measurevar,groupvars  mamen als strings
 #' @export
 #' @examples
 #'
 #'
-#' makeFormula("a", "b")
-#' makeFormula("a", c("b","c"))
-#' makeFormula("a", ~b+c)
-#' makeFormula(c("a", "d"), c("b","c"))
-#'
-makeFormula <- function(measurevar,
+#' make_formula("a", "b")
+#' make_formula("a", c("b","c"))
+#' make_formula("a", ~b+c)
+#' make_formula(c("a", "d"), c("b","c"))
+#' 
+make_formula <- function(measurevar,
                         groupvars) {
   if (is_formula2(groupvars))
     groupvars <- paste0(all.vars(groupvars), collapse = "+")
@@ -34,10 +33,19 @@ makeFormula <- function(measurevar,
   formula(paste(measurevar, "~", groupvars))
 }
 
+
+#' formel generieren
+#'
+#' in prepare_data2 
+#'
+#' @param measure.vars.group.vars,condition.vars mamen als strings
+#'
+#' @noRd
 to_formula <-
   function(measure.vars,
            group.vars,
            condition.vars = NULL) {
+    
     if (is.null(group.vars)) {
       fm <- paste0("~", paste(measure.vars, collapse = "+"))
     }
