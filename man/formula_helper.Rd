@@ -7,7 +7,7 @@
 \alias{make_formula}
 \alias{check_data}
 \alias{makeNamesNum}
-\title{formula_helper}
+\title{Formel-Objekte bearbeiten}
 \usage{
 formula_helper(...)
 
@@ -22,7 +22,7 @@ check_data(data, vars = NULL)
 makeNamesNum(measure, data, meAsNum = grepl("^[[:digit:]]", measure))
 }
 \arguments{
-\item{...}{weitere Einstellungen}
+\item{...}{weitere einstellungen}
 
 \item{x}{Formula}
 
@@ -50,7 +50,7 @@ check_data: Logical und wen FALSE ueber cat die  Objekt die falsch sind
 string( )
 }
 \description{
-Formel-Objekte bearbeiten
+Formulas
 
 clean_dots_formula: Formel bereinigen
 

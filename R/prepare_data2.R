@@ -113,15 +113,15 @@ prepare_data2.formula <-
       dedect_number <- as.integer(gsub("[^0-9]", "",
                                        stringr::str_extract(y_hsd[pos], "\\[.")))
       
-      if (!stpvers::is_empty2(dedect_string)) {
+      if (!is_empty2(dedect_string)) {
         for (i in  seq_len(length(pos)))
-          if (!stpvers::is_empty2(dedect_string[i]))
+          if (!is_empty2(dedect_string[i]))
             measure[pos[i]] <- dedect_string[i]
       }
       
-      if (!stpvers::is_empty2(dedect_number)) {
+      if (!is_empty2(dedect_number)) {
         for (i in seq_len(length(pos)))
-          if (!stpvers::is_empty2(dedect_number[i]))
+          if (!is_empty2(dedect_number[i]))
             digits[pos[i]] <- dedect_number[i]
           digits <- as.numeric(digits)
       }
@@ -311,4 +311,30 @@ prepare_data2.data.frame <- function(data,
     condition.class,
     digits
   )
+}
+
+
+#' @rdname prepare_data2
+#' @export
+prepare_data2.NULL <- function() {
+  res <- list(
+    data = NULL,
+    measure.vars = NULL,
+    group.vars = NULL,
+    condition.vars = NULL,
+    formula = NULL,
+    by = NULL,
+    measure = NULL,
+    row_name = NULL,
+    col_name = NULL,
+    measure.class = NULL,
+    group.class = NULL,
+    condition.class = NULL,
+    digits = NULL,
+    N = NULL
+  )
+  class(res) <- c("stp25data", class(res))
+  res
+  
+  
 }

@@ -73,13 +73,10 @@ stp25DataObjekt <- function(data = NULL,
     formula <- to_formula(measure.vars, group.vars, condition.vars)
   }
   
-  measure_class <- ifelse(measure == "mean",
-                          "numeric",
-                          ifelse(
-                            measure == "mean",
-                            "numeric",
-                            ifelse(measure == "freq", "factor",
-                                   measure)
+  measure_class <- ifelse(measure == "mean", "numeric",
+                   ifelse(measure == "mean", "numeric",
+                   ifelse(measure == "freq", "factor",
+                   measure)
                           ))
   if (!all(measure.class == measure_class)) {
     x <- which(!measure.class == measure_class)

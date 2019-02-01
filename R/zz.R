@@ -7,7 +7,6 @@
 "_PACKAGE"
 
 #' importFrom stp25aggregate GetLabelOrName
-#' importFrom stpvers is_empty2
 #' importFrom stp25rndr default_stp25
 #' 
 #' importFrom stringr str_extract str_split

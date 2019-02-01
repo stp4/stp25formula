@@ -4,6 +4,7 @@
 \alias{prepare_data2}
 \alias{prepare_data2.formula}
 \alias{prepare_data2.data.frame}
+\alias{prepare_data2.NULL}
 \title{prepare_data2}
 \usage{
 prepare_data2(...)
@@ -13,6 +14,8 @@ prepare_data2(...)
 
 \method{prepare_data2}{data.frame}(data, ..., by = "1", groups = NULL,
   subset, na.action = na.pass)
+
+\method{prepare_data2}{NULL}()
 }
 \arguments{
 \item{...}{Variablen}

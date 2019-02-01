@@ -1,18 +1,12 @@
-#' formula_helper
-#'
+ 
 #' Formel-Objekte bearbeiten
-
-#' @param ... weitere Einstellungen
 #'
-#' @return liste
-#' @examples
+#' Formulas 
 #'
-#' data <- data.frame(x = NA, y = NA, z = NA)
-#' stp25formula:::clean_dots_formula(x ~ y, data)
-#' stp25formula:::clean_dots_formula(. ~ x + y, data)
-#' stp25formula:::clean_dots_formula(x + y ~ ., data)
-#' stp25formula:::clean_dots_formula(~., data)
-#' stp25formula:::formula_split(a+b~x|y)
+#' @param ... weitere einstellungen
+#'
+#' @return liste 
+#' @export
 #'
 formula_helper <- function(...) {
   formula(...)
@@ -27,6 +21,15 @@ formula_helper <- function(...) {
 #' @description clean_dots_formula: Formel bereinigen
 #' @return clean_dots_formula: formula - Objekt
 #' 
+#' @examples
+#'
+#' data <- data.frame(x = NA, y = NA, z = NA)
+#' stp25formula:::clean_dots_formula(x ~ y, data)
+#' stp25formula:::clean_dots_formula(. ~ x + y, data)
+#' stp25formula:::clean_dots_formula(x + y ~ ., data)
+#' stp25formula:::clean_dots_formula(~., data)
+#' stp25formula:::formula_split(a+b~x|y)
+#'
 clean_dots_formula <- function(x,
                                data = NULL,
                                names_data = names(data)) {
@@ -101,24 +104,17 @@ formula_split <- function(x) {
 }
 
 
-#' is fromula
-#'
-#' auch in stpvers vorhanden
-#'
+
+
 #' @param x A object to be tested
-#'
 #' @noRd
 is_formula2 <- function (x) {
   inherits(x, "formula")
 }
 
 
-#' is empty
-#'
-#' auch in stpvers vorhanden
-#'
+
 #' @param x A object to be tested
-#'
 #' @noRd
 is_empty2 <- function (x) {
   if (length(x) == 0)
