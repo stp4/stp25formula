@@ -38,9 +38,9 @@ prepare_data2 <- function(...){
 #' @param groups Block codition
 #' @export
 #' @examples
-#' 
+#'
 #' dat<- data.frame(sex=1:2, m1=1:2,m2=1:2, m3=1:2, m4=1:2, m5=1:2, m6=1:2, geschl=1:2)
-#' 
+#'
 #' prepare_data2(~ m1 + m2 + m3 + m4, dat)
 #' prepare_data2(~ log(m1) + m2 + m3 + m4, dat)
 #' prepare_data2(~ m1[1] + m2 + m3 + m4, dat)
@@ -52,9 +52,16 @@ prepare_data2.formula <-
            subset,
            na.action = na.pass,
            groups = NULL) {
+    
+   # cat("\n prepare_data2.formula \n")
     if (!is.null(groups)) {
-      x <- formula(paste(deparse(x), "|", gsub("~", "", deparse(groups))))
+      # das ist nicht schoen aber es funktioniert auch bei langen
+      # Formeln
+      x<-  paste(deparse(x), collapse="")
+      x <- formula(paste(x, "|", gsub("~", "", deparse(groups))))
     }
+    
+ 
     
     if (!tibble::is_tibble(data))
       data <- tibble::as_tibble(data)
