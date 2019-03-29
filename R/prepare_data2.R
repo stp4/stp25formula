@@ -57,8 +57,13 @@ prepare_data2.formula <-
     if (!is.null(groups)) {
       # das ist nicht schoen aber es funktioniert auch bei langen
       # Formeln
+      
+      warnings(" prepare_data2.formula : benutze Gruppen als condition.vars!")
+      condition.vars <- gsub("~", "", deparse(groups))
       x<-  paste(deparse(x), collapse="")
-      x <- formula(paste(x, "|", gsub("~", "", deparse(groups))))
+      x <- formula(
+        paste(x, "|", condition.vars)
+                   )
     }
     
  

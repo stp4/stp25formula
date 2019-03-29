@@ -71,7 +71,7 @@ clean_dots_formula <- function(x,
 formula_split <- function(x) {
   # split A | B into formula <- A; condition <- B
   fs <-
-    stringr::str_split(deparse(x), "\\|")[[1]]
+    stringr::str_split(paste(deparse(x), collapse=""), "\\|")[[1]]
   # try to split, else leave formula unchanged and set condition to NULL
   if ((length(fs) != 2) ||
       !tryCatch({
