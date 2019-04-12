@@ -66,8 +66,6 @@ prepare_data2.formula <-
                    )
     }
     
- 
-    
     if (!tibble::is_tibble(data))
       data <- tibble::as_tibble(data)
     
@@ -123,7 +121,7 @@ prepare_data2.formula <-
         stp25_stat_methode(dedect_string) # return:"mean"   "freq"   "median" NA
       
       dedect_number <- as.integer(gsub("[^0-9]", "",
-                                       stringr::str_extract(y_hsd[pos], "\\[.")))
+                                       stringr::str_extract(y_hsd[pos], "\\[.+")))
       
       if (!is_empty2(dedect_string)) {
         for (i in  seq_len(length(pos)))
