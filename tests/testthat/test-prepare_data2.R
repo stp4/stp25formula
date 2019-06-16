@@ -62,8 +62,7 @@ test_that("prepare_data2 formula simpel", {
   expect_equal(r1$by,
                "1")
   
-  expect_that(is.data.frame(r1$data),
-              is_true())
+  expect_true(tibble::is_tibble(r1$data))
   
   expect_equal(r1$N,
                8)
@@ -174,16 +173,16 @@ test_that("prepare_data2 formula and data.frame digits", {
   
   expect_equal(r1$digits,
                r2$digits)
-  
-  r3 <- prepare_data2(dat, m1 , m2, m3 = median)
+  #die Variante habe ich gestrichen
+ # r3 <- prepare_data2(dat, m1 , m2, m3 = median)
   r4 <- prepare_data2(dat, m1 , m2, m3[median])
   r5 <- prepare_data2( ~ m1 + m2 + m3[median], dat)
   
-  expect_equal(r3$measure,
+  expect_equal(r5$measure,
                r4$measure)
   
-  expect_equal(r3$measure,
-               r5$measure)
+ # expect_equal(r3$measure,
+ #              r5$measure)
   
 })
 

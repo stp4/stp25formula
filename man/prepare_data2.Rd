@@ -2,37 +2,12 @@
 % Please edit documentation in R/prepare_data2.R
 \name{prepare_data2}
 \alias{prepare_data2}
-\alias{prepare_data2.formula}
-\alias{prepare_data2.data.frame}
 \alias{prepare_data2.NULL}
 \title{prepare_data2}
 \usage{
 prepare_data2(...)
 
-\method{prepare_data2}{formula}(x, data, subset, na.action = na.pass,
-  groups = NULL)
-
-\method{prepare_data2}{data.frame}(data, ..., by = "1", groups = NULL,
-  subset, na.action = na.pass)
-
 \method{prepare_data2}{NULL}()
-}
-\arguments{
-\item{...}{Variablen}
-
-\item{x}{formel}
-
-\item{data}{daten}
-
-\item{subset}{nicht implementiert}
-
-\item{na.action}{nicht zum aendern}
-
-\item{groups}{Block codition}
-
-\item{by}{Gruppe}
-
-\item{groups}{Block codition}
 }
 \value{
 Liste mit Namen und Daten
@@ -69,7 +44,6 @@ prepare_data2(~ m1 + m2 + m3 + m4, dat)
 prepare_data2(~ log(m1) + m2 + m3 + m4, dat)
 prepare_data2(~ m1[1] + m2 + m3 + m4, dat)
 prepare_data2(~ m1[1] + m2 + m3[4,median] + m4, dat)
-
 prepare_data2(dat, m1, m2, m3, m4)
 prepare_data2(dat, 4:7)
 prepare_data2(dat, m1[1], m2, m3, m4)
