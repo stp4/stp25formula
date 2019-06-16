@@ -2,8 +2,8 @@ Package: stp25formula
 Type: Package
 Encoding: UTF-8
 Title: Formulas Transformation Functions
-Version: 0.2.2
-Date: 2018-11-22
+Version: 0.2.1
+Date: 2019-06-16
 Authors@R: person("Wolfgang", "Peter", role = c("aut", "cre"), email = "w.peter@tirol.com")
 Maintainer: Wolfgang Peter <w.peter@tirol.com>
 Description: Collection of miscellaneous utility functions, supporting formula transformation tasks.

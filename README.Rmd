@@ -1,0 +1,82 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+require(stp25formula)
+```
+
+# stp25formula
+
+Interne Funktionen um Formel und Daten für Evaluationen vorzubereiten. Die daten werden dabei ins tibble-Format konvertiert und angeforderte Transformationen ausgeführt.
+
+Overview
+--------
+
+ 
+
+### Usage
+
+```{r}
+dat <- data.frame(
+  sex = 1:2,
+  treatment = 1:2,
+  m1 = 1:2,  m2 = 1:2,  m3 = 1:2,  m4 = 1:2,  m5 = 1:2,  m6 = 1:2
+)
+x <- stp25formula::prepare_data2( ~ m1 + m2 + m3 + m4, dat)
+str(x)
+
+
+```
+
+```{r}
+prepare_data2(dat, 2:5)
+```
+
+```{r}
+prepare_data2(dat, m1, m2, m3)
+```
+
+
+
+
+
+ 
+Lokal transformieren. Interne Evaluation mit stats::model.frame die Variablen Namen bleiben aber so erhalten wie sie im orinalem data.frame waren.
+
+```{r}
+ prepare_data2(~ log(m1) + m2 + m3 + m4, dat)
+```
+
+Metainformation wie digits und Berechnungsmethoden bereitstellen 
+
+```{r}
+prepare_data2( ~ m1[1] + m2 + m3[4, median] + m4, dat)
+
+prepare_data2(dat, m1[1, freq], m2[2, mean], m3[3, median])
+```
+
+Gruppierung
+
+```{r}
+
+prepare_data2(m1 ~ sex, dat)
+
+prepare_data2(dat, m1, by = ~ sex, )
+x <- prepare_data2(m1 ~ sex | treatment, dat)
+x
+x$condition.vars
+```
+
+
+
+
+
+
