@@ -12,11 +12,19 @@ prepare_data2.formula <-
   function(x,
            data,
            groups = NULL,
-           na.action = na.pass) {
+           na.action = na.pass,
+           drop.unused.levels=FALSE) {
+    
+    lbl <- stp25aggregate::GetLabelOrName(data)
     fm <- cleaup_formula(x, data, groups)
+ 
     
-    dat <- select_data(fm$all.vars, data, na.action)
+    dat <- select_data(fm$all.vars, 
+                       data, 
+                       na.action,
+                       drop.unused.levels)
     
+  
     stp25Data <- list(
       data = tibble::as_tibble(dat) ,
       measure.vars = fm$measure.vars,
@@ -25,8 +33,8 @@ prepare_data2.formula <-
       formula = fm$formula,
       by = fm$by,
       measure = fm$measure,
-      row_name = stp25aggregate::GetLabelOrName(data[fm$measure.vars]),
-      col_name = stp25aggregate::GetLabelOrName(data[fm$group.vars]),
+      row_name = lbl[fm$measure.vars],
+      col_name = lbl[fm$group.vars],
       measure.class = fm$measure.class,
       group.class = fm$group.class,
       condition.class = fm$condition.class,
@@ -51,10 +59,40 @@ prepare_data2.data.frame <- function(data,
                                      ...,
                                      by = "1",
                                      groups = NULL,
-                                     na.action = na.pass) {
+                                     na.action = na.pass,
+                                     drop.unused.levels=FALSE) {
+  # measure.vars <-
+  #   sapply(lazyeval::lazy_dots(...), function(x)
+  #     as.character(x[1]))
+  
+  
+  hsub<- "h__"
+  hend<- "__h"
+  sub_haeding<- c()
   measure.vars <-
-    sapply(lazyeval::lazy_dots(...), function(x)
-      as.character(x[1]))
+    sapply(lazyeval::lazy_dots(...), function(x) {
+      if (!is.character(x$expr))
+        as.character(x[1])
+      else{
+        sub_haeding <<- c(sub_haeding, as.character(x[1]))
+        paste0(hsub , length(sub_haeding), hend)
+      }
+    })
+  
+  
+  
+  if( !is.null(sub_haeding ) ){
+    i<- length(sub_haeding)
+    nn <- ncol(data)
+    data[ paste0(hsub, seq_along(i), hend) ] <- NA
+    
+    for (n in seq_along(i))
+      attr(data[[n+nn]], "label") <- sub_haeding [[n]]
+  }
+  
+  
+  
+  
   measure.vars <- cleaup_names(measure.vars, data)
   # message("measure.vars:")
 #  print(measure.vars)
@@ -66,7 +104,10 @@ prepare_data2.data.frame <- function(data,
       group.vars = by,
       condition.vars = groups
     )
-  prepare_data2.formula(x = fm, data = data, na.action=na.action)
+  prepare_data2.formula(x = fm, 
+                        data = data, 
+                        na.action=na.action,
+                        drop.unused.levels=drop.unused.levels)
   
 }
 
@@ -77,7 +118,7 @@ prepare_data2.data.frame <- function(data,
 select_data <-   function(formula,
                           data,
                           na.action = NULL,
-                          drop.unused.levels = TRUE) {
+                          drop.unused.levels = FALSE) {
   
  formula <-  Formula::Formula(formula)
  data <- if (is.null(na.action))
@@ -100,12 +141,12 @@ cleaup_formula <- function(formula, data, groups) {
     # das ist nicht schoen aber es funktioniert auch bei langen Formeln
     warnings(" prepare_data2.formula : benutze Gruppen als condition.vars!")
     condition.vars <- gsub("~", "", deparse(groups))
-    x<-  paste(deparse(x), collapse="")
-    x <- formula(
-      paste(x, "|", condition.vars)
-    )
+    formula <-  paste(deparse(formula), collapse = "")
+    formula <- formula(paste(formula, "|", condition.vars))
   }
   
+  
+  formula <- clean_dots_formula(formula, names_data = names(data))
   frml <- formula_split(formula)
     # message("cleaup_formula:")
    #  print(frml)
