@@ -16,7 +16,10 @@ prepare_data2.formula <-
            drop.unused.levels=FALSE) {
     
     lbl <- stp25aggregate::GetLabelOrName(data)
+     
+    
     fm <- cleaup_formula(x, data, groups)
+
  
     
     dat <- select_data(fm$all.vars, 
@@ -65,7 +68,6 @@ prepare_data2.data.frame <- function(data,
   #   sapply(lazyeval::lazy_dots(...), function(x)
   #     as.character(x[1]))
   
-  
   hsub<- "h__"
   hend<- "__h"
   sub_haeding<- c()
@@ -78,8 +80,9 @@ prepare_data2.data.frame <- function(data,
         paste0(hsub , length(sub_haeding), hend)
       }
     })
+ 
   
-  
+ 
   
   if( !is.null(sub_haeding ) ){
     i<- length(sub_haeding)
@@ -90,20 +93,26 @@ prepare_data2.data.frame <- function(data,
       attr(data[[n+nn]], "label") <- sub_haeding [[n]]
   }
   
-  
-  
-  
   measure.vars <- cleaup_names(measure.vars, data)
-  # message("measure.vars:")
-#  print(measure.vars)
   
-  
+  # Fehlercheck
+  if (length(setdiff(measure.vars, names(data))) > 0) {
+    missing_measure.vars <- setdiff(measure.vars, names(data))
+    i <- length(missing_measure.vars)
+    nn <- ncol(data)
+    data[missing_measure.vars] <- NA
+
+    for (n in seq_along(i))
+      attr(data[[n + nn]], "label") <- paste("Error:", missing_measure.vars[n], "dose not exist!")
+  }
+
   fm <-
     to_formula(
       measure.vars = measure.vars,
       group.vars = by,
       condition.vars = groups
     )
+
   prepare_data2.formula(x = fm, 
                         data = data, 
                         na.action=na.action,
@@ -144,13 +153,11 @@ cleaup_formula <- function(formula, data, groups) {
     formula <-  paste(deparse(formula), collapse = "")
     formula <- formula(paste(formula, "|", condition.vars))
   }
-  
-  
+
   formula <- clean_dots_formula(formula, names_data = names(data))
+
   frml <- formula_split(formula)
-    # message("cleaup_formula:")
-   #  print(frml)
-    
+
   formula <- frml$formula
  
   
@@ -201,15 +208,17 @@ cleaup_formula <- function(formula, data, groups) {
   }
   
   measure.vars <- all.vars(formula[[2L]]) 
- # message("measure.vars:")
- # print(measure.vars)
-  
+
   measure.class <- get_classes(data[measure.vars])
+  
 
   if (any(is.na(measure)))
     measure <- default_measure(measure, measure.vars, measure.class)
+
+  
   if (any(is.na(digits)))
     digits <- default_digits(digits, measure.vars, measure.class)
+  
   
   if (length(formula) == 3L ){
     group.vars <-  all.vars(formula[[3L]])
@@ -253,11 +262,7 @@ cleaup_formula <- function(formula, data, groups) {
 #' auswertungs Methode
 #' @noRd
 default_measure <- function(measure, measure.vars, measure.class) {
-  
-  #    message("measure.vars:")
-  # print(measure)
-  # print(measure.vars)
-  # print(measure.class)
+
   
   if (length(measure) == 1) {
     measure <- measure.class
@@ -303,13 +308,7 @@ cleaup_names <- function(measure.vars, data ) {
     measure <- measure[!is.na(measure)]
   }
   
-  
-  # hier fehlt noch der Fehlercheck
-  # 
-  # names(data) %in% measure
-  # message("Prüfe ob Variablen vorhenden find")
-  # print(measure.vars)
-  # print(names(data) %in% measure)
+
   measure
 }
 
