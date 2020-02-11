@@ -12,7 +12,12 @@
 #' make_formula(c("a", "d"), c("b","c"))
 #' 
 make_formula <- function(measurevar,
-                        groupvars) {
+                        groupvars=NULL) {
+  if (is.null(groupvars))
+    return(formula(paste("~", paste(
+      measurevar, collapse = "+"
+    ))))
+  
   if (is_formula2(groupvars))
     groupvars <- paste0(all.vars(groupvars), collapse = "+")
   else
