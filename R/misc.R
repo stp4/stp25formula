@@ -100,6 +100,13 @@ stp25_stat_methode <- function(x,
                                mymet = c("freq",
                                          "mean",
                                          "median",
-                                         "multiresponse")) {
+                                         "multiresponse",
+                                         "pie",
+                                         "dot",
+                                         "hist",
+                                         "box",
+                                         "bar"
+                                         
+                                         )) {
   mymet[match(x, mymet)]
 }
