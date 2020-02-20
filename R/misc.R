@@ -83,9 +83,17 @@ makeNamesNum <- function(measure,
 #'
 #' @noRd
 get_classes <-
-  function(data) {
-    sapply(data, function(x)
-      setdiff(class(x), "labelled"))
+  function(data
+           # mode = c("numeric",
+           #          "ordered",
+           #          "factor",
+           #          "logical",
+           #          "character",
+           #          "integer",
+           #          "Date")
+  ) {
+    sapply(data, function(x) 
+      setdiff(class(x), c("labelled", "ordered")))
   }
 
 #' stp25_stat_methode  
