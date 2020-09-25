@@ -47,286 +47,6 @@ prepare_data2 <- function(...){
   UseMethod("prepare_data2")
 }
 
- 
-
-# 
-# prepare_data2.formula <-
-#   function(x,
-#            data,
-#            subset,
-#            na.action = na.pass,
-#            groups = NULL) {
-#     
-#      if (!tibble::is_tibble(data))
-#       data <- tibble::as_tibble(data)   
-#    
-#     
-#     if (!is.null(groups)) {
-#       # das ist nicht schoen aber es funktioniert auch bei langen
-#       # Formeln
-#       
-#       warnings(" prepare_data2.formula : benutze Gruppen als condition.vars!")
-#       condition.vars <- gsub("~", "", deparse(groups))
-#       x<-  paste(deparse(x), collapse="")
-#       x <- formula(
-#         paste(x, "|", condition.vars)
-#                    )
-#     }
-#     
-# 
-#     
-#     measure.vars <- NULL
-#     group.vars <- NULL
-#     condition.vars <- NULL
-#     formula <- NULL
-#     by <- NULL
-#     measure <- NULL
-#     row_name <- NULL
-#     col_name <- NULL
-#     measure.class <- NULL
-#     group.class <- NULL
-#     condition.class <- NULL
-#     digits <- NULL
-#     all_vars <- NULL
-#     
-#     x <- clean_dots_formula(x, data)
-#     # lng_fm <- length(x)
-#     frml <- formula_split(x)
-#     formula <- frml$formula
-#     
-#     measure.vars <- all.vars(x[[2L]])
-#     condition.vars <- all.vars(frml$condition)
-#     #- Formel vom Type 'a+b[2]~c' kann auch 'a+b[2,median] ~ . ' sein
-#     if (any(all.names(formula[[2L]]) %in% '[')) {
-#       #  bei var[2,median] kommt der Median durch, error wegen  width.cutoff = 60L
-#       y_hsd <-
-#         gsub(" ", "", paste(deparse(formula[[2L]]), collapse = ""))
-#       y_hsd <- strsplit(y_hsd, "\\+")[[1]]
-#       
-#       
-#       measure.vars <-
-#         gsub("\\[.+\\]", "", y_hsd) # bereinigen von Klammern
-#       
-#       
-#       measure.class <- get_classes(data[measure.vars])
-#       measure <- measure.class
-#       digits <- ifelse(
-#         measure == "factor",
-#         stp25rndr::default_stp25("digits", "prozent"),
-#         stp25rndr::default_stp25("digits", "mittelwert")
-#       )
-#       
-#       
-#       # Dedect Position
-#       pos <- grep('\\[', y_hsd)
-#       # dedect_string afer ,  var[2,median]  gsub("[^[:alpha:]]", "", "var[2,median]")
-#       dedect_string <- gsub("[^[:alpha:]]", "",
-#                             stringr::str_extract(y_hsd[pos], "\\[.+"))
-#       
-#       dedect_string <-
-#         stp25_stat_methode(dedect_string) # return:"mean"   "freq"   "median" NA
-#       
-#       dedect_number <- as.integer(gsub("[^0-9]", "",
-#                                        stringr::str_extract(y_hsd[pos], "\\[.+")))
-#       
-#       if (!is_empty2(dedect_string)) {
-#         for (i in  seq_len(length(pos)))
-#           if (!is_empty2(dedect_string[i]))
-#             measure[pos[i]] <- dedect_string[i]
-#       }
-#       
-#       if (!is_empty2(dedect_number)) {
-#         for (i in seq_len(length(pos)))
-#           if (!is_empty2(dedect_number[i]))
-#             digits[pos[i]] <- dedect_number[i]
-#           digits <- as.numeric(digits)
-#       }
-#       
-#       if (length(formula) == 2) {
-#         formula <- to_formula(measure.vars, NULL)
-#         all_vars <- c(measure.vars, condition.vars)
-#       } else {
-#         x_hsd <- strsplit(deparse(formula[[3L]]), " \\+ ")[[1]]
-#         group.vars <- gsub("\\[.+\\]", "", x_hsd)
-#         col_name <- stp25aggregate::GetLabelOrName(data[group.vars])
-#         formula <- to_formula(measure.vars, group.vars)
-#         all_vars <- c(measure.vars, group.vars, condition.vars)
-#       }
-#       names(digits) <- measure.vars
-#       data <- data[all_vars]
-#       
-#       
-#       #
-#       #  ACHTUNg
-#       # Hier ist na.action nicht implemeniert!!!!
-#       #
-#       # https://stackoverflow.com/questions/53827563/how-should-i-call-model-frame-in-r
-#       
-# 
-#     } else {
-#       # A+B+C~G  oder log(a) + b + c
-#       formula <- Formula::Formula(formula)
-#       data2 <-
-#         stats::model.frame(formula, data = data, na.action = na.action)
-#       X_data <- Formula::model.part(formula, data = data2, rhs = 1)
-#       Y_data <- Formula::model.part(formula, data = data2, lhs = 1)
-#       
-#       xname <- names(X_data)
-#       yname <- names(Y_data)
-#       
-#       #-- Einzelvergeich kein Y_data und wir werten ueber Y_data aus daher
-#       if (!length(yname)) {
-#         if (length(grep("\\(", formula)) > 0) {
-#           # yname <-  all.vars(formula[[2L]])
-#           xname <- all.vars(formula[[2L]])
-#           names(X_data) <- xname
-#           
-#           row_name <- stp25aggregate::GetLabelOrName(X_data)
-#           # names(Y_data) <- yname
-#           formula <- to_formula(xname, NULL)
-#         }
-#         data <- X_data
-#      
-#         measure.vars <- xname
-#       } else {
-#         if (length(grep("\\(", formula)) > 0) {
-#           yname <-  all.vars(formula[[2L]])
-#           xname <- all.vars(formula[[3L]])
-#           names(X_data) <- xname
-#           names(Y_data) <- yname
-#           formula <- to_formula(yname, xname)
-#         }
-#         
-#         if (is.null(condition.vars))
-#           data <- cbind(X_data, Y_data)
-#         else
-#           data <- cbind(X_data, Y_data, data[condition.vars])
-#         
-#    
-#         measure.vars <- yname
-#         group.vars <- xname
-#       }
-#     }
-#    
-#     stp25DataObjekt(
-#       tibble::as_tibble(data) ,
-#       measure.vars,
-#       group.vars,
-#       condition.vars,
-#       formula(formula),
-#       by,
-#       measure,
-#       row_name,
-#       col_name,
-#       measure.class,
-#       group.class,
-#       condition.class,
-#       digits
-#     )
-#   }
-# 
-# 
-#  
-# 
-# prepare_data2.data.frame <- function(data,
-#                                      ...,
-#                                      by = "1",
-#                                      groups = NULL,
-#                                      subset,
-#                                      na.action = na.pass) {
-#   if (!tibble::is_tibble(data))
-#     data <- tibble::as_tibble(data)
-#   
-#   measure.vars = NULL
-#   group.vars = NULL
-#   
-#   condition.vars <-
-#     if (is_formula2(groups))
-#       all.vars(groups)
-#   else
-#     groups
-#   
-#   formula <- NULL
-#   row_name <- NULL
-#   col_name <- NULL
-#   measure.class <- NULL
-#   group.class <- NULL
-#   condition.class <- NULL
-#   digits <- NULL
-#   all_vars <- NULL
-#   
-#   measure <-
-#     sapply(lazyeval::lazy_dots(...), function(x)
-#       as.character(x[1]))
-#   
-#   measure <- makeNamesNum(measure, data)
-#   
-#   if (length(measure) == 0) {
-#     measure.vars <- names(data)
-#   }
-#   else if (any(grepl("\\[", measure))) {
-#     return(prepare_data2.formula(to_formula(measure, by, condition.vars), data))
-#   }
-#   else {
-#     if (length(names(measure)) != 0) {
-#       measure.vars <-
-#         ifelse(names(measure) == "", measure, names(measure))
-#       measure.class <- get_classes(data[measure.vars])
-#       measure <-
-#         ifelse(names(measure) == "", measure.class, measure)
-#     }
-#     else {
-#       measure.vars <- measure
-#       measure <- measure.class <- get_classes(data[measure.vars])
-#     }
-#     names(measure) <- measure.vars
-#     fm <- paste(measure.vars, collapse = "+")
-#     
-#     if (by == "1") {
-#       all_vars <- c(measure.vars, condition.vars)
-#       data <- data[all_vars]
-#       formula <- formula(paste("~", fm))
-#     }
-#     else if (is_formula2(by)) {
-#       group.vars <- all.vars(by)
-#       all_vars <- c(measure.vars, group.vars, condition.vars)
-#       data <- data[all_vars]
-#       group.class <- get_classes(data[group.vars])
-#       formula <-
-#         to_formula(measure.vars, group.vars, condition.vars)
-#       
-#       col_name <- stp25aggregate::GetLabelOrName(data[group.vars])
-#     }
-#     else {
-#       group.vars <- by
-#       by <- formula(paste("~", paste(by, collapse = "+")))
-#       all_vars <- c(measure.vars, group.vars, condition.vars)
-#       data <- data[all_vars]
-#       group.class <- get_classes(data[group.vars])
-#       formula <-
-#         to_formula(measure.vars, group.vars, condition.vars)
-#       
-#       col_name <- stp25aggregate::GetLabelOrName(data[group.vars])
-#     }
-#   }
-#   stp25DataObjekt(
-#     data = data,
-#     measure.vars,
-#     group.vars,
-#     condition.vars,
-#     formula,
-#     by,
-#     measure,
-#     row_name,
-#     col_name,
-#     measure.class,
-#     group.class,
-#     condition.class,
-#     digits
-#   )
-# }
-
-
 #' @rdname prepare_data2
 #' @export
 prepare_data2.NULL <- function() {
@@ -351,3 +71,300 @@ prepare_data2.NULL <- function() {
   
   
 }
+
+#' prepare_data2.formula
+#'
+#' @param x formel
+#' @param data  data.frame
+#' @param na.action na.pass, na.omit
+#' @param groups condition
+#'
+#' @export
+prepare_data2.formula <-
+  function(x,
+           data,
+           groups = NULL,
+           na.action = na.pass,
+           drop.unused.levels=FALSE) {
+    
+    lbl <- stp25aggregate::get_label(data, include.units = TRUE)
+    fm <- cleaup_formula(x, data, groups)
+    dat <- select_data(fm$all.vars, 
+                       data, 
+                       na.action,
+                       drop.unused.levels)
+
+    stp25Data <- list(
+      data =    dat,
+      measure.vars = fm$measure.vars,
+      group.vars = fm$group.vars,
+      condition.vars = fm$condition.vars,
+      formula = fm$formula,
+      by = fm$by,
+      measure = fm$measure,
+      row_name = lbl[fm$measure.vars],
+      col_name = lbl[fm$group.vars],
+      measure.class = fm$measure.class,
+      group.class = fm$group.class,
+      condition.class = fm$condition.class,
+      digits = fm$digits,
+      N = nrow(dat)
+    )
+    
+    class(stp25Data) <- c("stp25data", "list")
+    stp25Data
+  }
+
+
+#' prepare_data2.data.frame
+#'
+#' @param ... Namen oder Nummern (y-Variablen))
+#' @param by  x-Variablen
+#'
+#' @export
+prepare_data2.data.frame <- function(data,
+                                     ...,
+                                     by = "1",
+                                     groups = NULL,
+                                     na.action = na.pass,
+                                     drop.unused.levels=FALSE) {
+  # measure.vars <-
+  #   sapply(lazyeval::lazy_dots(...), function(x)
+  #     as.character(x[1]))
+  
+  hsub<- "h__"
+  hend<- "__h"
+  sub_haeding<- c()
+  measure.vars <-
+    sapply(lazyeval::lazy_dots(...), function(x) {
+      if (!is.character(x$expr))
+        as.character(x[1])
+      else{
+        sub_haeding <<- c(sub_haeding, as.character(x[1]))
+        paste0(hsub , length(sub_haeding), hend)
+      }
+    })
+
+  if( !is.null(sub_haeding ) ){
+    i<- length(sub_haeding)
+    nn <- ncol(data)
+    data[ paste0(hsub, seq_along(i), hend) ] <- NA
+    
+    for (n in seq_along(i))
+      attr(data[[n+nn]], "label") <- sub_haeding [[n]]
+  }
+  
+  measure.vars <- cleaup_names(measure.vars, data)
+  
+  # Fehlercheck
+  if (length(setdiff(measure.vars, names(data))) > 0) {
+    missing_measure.vars <- setdiff(measure.vars, names(data))
+    i <- length(missing_measure.vars)
+    nn <- ncol(data)
+    data[missing_measure.vars] <- NA
+
+    for (n in seq_along(i))
+      attr(data[[n + nn]], "label") <- paste("Error:", missing_measure.vars[n], "dose not exist!")
+  }
+
+  fm <-
+    to_formula(
+      measure.vars = measure.vars,
+      group.vars = by,
+      condition.vars = groups
+    )
+
+  prepare_data2.formula(x = fm, 
+                        data = data, 
+                        na.action=na.action,
+                        drop.unused.levels=drop.unused.levels)
+  
+}
+
+
+#' model.frame
+#' Formula::Formula splitet log(m1) + m2 + m3 + m4 ~ g richtig auf
+#' @noRd
+select_data <-   function(formula,
+                          data,
+                          na.action = NULL,
+                          drop.unused.levels = FALSE) {
+  formula <-  Formula::Formula(formula)
+  data <- if (is.null(na.action))
+    stats::model.frame(formula, data,
+                       drop.unused.levels = drop.unused.levels)
+  else
+    stats::model.frame(formula,
+                       data,
+                       na.action = na.action,
+                       drop.unused.levels = drop.unused.levels)
+  
+  names(data) <- all.vars(formula)
+  
+  if (tibble::is_tibble(data))
+    data
+  else
+    tibble::as_tibble(data)
+}
+
+#' Aufdröseln
+#' @noRd
+cleaup_formula <- function(formula, data, groups) {
+  measure <- digits<- NA
+  if (!is.null(groups)) {
+    # das ist nicht schoen aber es funktioniert auch bei langen Formeln
+    warnings(" prepare_data2.formula : benutze Gruppen als condition.vars!")
+    condition.vars <- gsub("~", "", deparse(groups))
+    formula <-  paste(deparse(formula), collapse = "")
+    formula <- formula(paste(formula, "|", condition.vars))
+  }
+
+  formula <- clean_dots_formula(formula, names_data = names(data))
+  frml <- formula_split(formula)
+  formula <- frml$formula
+ 
+  
+  if (any(all.names(formula[[2L]]) %in% '[')) {
+    #  bei var[2,median] kommt der Median durch, error wegen  width.cutoff = 60L
+    y_hsd <-
+      gsub(" ", "", paste(deparse(formula[[2L]]), collapse = ""))
+    y_hsd <- strsplit(y_hsd, "\\+")[[1]]
+    
+    measure.vars <- gsub("\\[.+\\]", "", y_hsd) # bereinigen von Klammern
+    measure <- as.character(rep(NA, length(measure.vars)))
+    digits <- as.integer(rep(NA, length(measure.vars)) )
+    names(digits) <- measure.vars
+    names(measure) <- measure.vars
+  
+    # Dedect Position
+    pos <- grep('\\[', y_hsd)
+    # dedect_string afer ,  var[2,median]  gsub("[^[:alpha:]]", "", "var[2,median]")
+    dedect_string <- gsub("[^[:alpha:]]", "",
+                          stringr::str_extract(y_hsd[pos], "\\[.+"))
+    # return:"mean"   "freq"   "median" NA
+    dedect_string <- stp25_stat_methode(dedect_string) 
+    
+    dedect_number <- as.integer(gsub("[^0-9]", "",
+                                     stringr::str_extract(y_hsd[pos], "\\[.+")))
+    
+    if (!is_empty2(dedect_string)) {
+      for (i in  seq_len(length(pos)))
+        if (!is_empty2(dedect_string[i]))
+          measure[pos[i]] <- dedect_string[i]
+    }
+    
+    if (!is_empty2(dedect_number)) {
+      for (i in seq_len(length(pos)))
+        if (!is_empty2(dedect_number[i]))
+          digits[pos[i]] <- dedect_number[i]
+    }
+    
+    if (length(formula) == 2) {
+      formula <- to_formula(measure.vars, NULL)
+      
+    } else {
+      x_hsd <- strsplit(deparse(formula[[3L]]), " \\+ ")[[1]]
+      group.vars <- gsub("\\[.+\\]", "", x_hsd)
+      formula <- to_formula(measure.vars, group.vars)
+    }
+  }
+  
+  measure.vars <- all.vars(formula[[2L]]) 
+  measure.class <- get_classes(data[measure.vars])
+  
+
+  if (any(is.na(measure)))
+    measure <- default_measure(measure, measure.vars, measure.class)
+
+  
+  if (any(is.na(digits)))
+    digits <- default_digits(digits, measure.vars, measure.class)
+  
+  
+  if (length(formula) == 3L ){
+    group.vars <-  all.vars(formula[[3L]])
+    by <- formula(paste("~", paste(group.vars, collapse="+")))
+    group.class <- get_classes(data[group.vars])
+  }
+  else{
+    group.vars<-  group.class<- NULL
+    by<- "1"
+  }
+  
+  if(!is.null(frml$condition)){ 
+    condition.vars <- all.vars(frml$condition)
+    condition.class <- get_classes(data[condition.vars]) 
+    }
+    else{
+      condition.vars<-condition.class <- NULL
+    }
+ 
+ 
+  list(
+    formula = formula,
+    by =   by,
+    measure.vars = measure.vars,
+    group.vars = group.vars,
+    condition.vars = condition.vars,
+    measure = measure,
+    digits = digits,
+    measure.class = measure.class,
+    group.class = group.class,
+    condition.class = condition.class,
+    all.vars = if(is.null(condition.vars)) formula 
+       else update(formula, 
+                   formula(paste("~ . +", paste(
+                     condition.vars, collapse="+"))))
+  )
+}
+
+#' auswertungs Methode
+#' @noRd
+default_measure <- function(measure, measure.vars, measure.class) {
+  if (length(measure) == 1) {
+    measure <- measure.class
+  }
+  else{
+    nas <- which(is.na(measure))
+    measure[nas] <- measure.class[nas]
+  }
+  names(measure) <- measure.vars
+  measure
+}
+
+#' digits
+#' @noRd
+default_digits <- function(digits, measure.vars, measure.class) {
+  if (length(digits) == 1) {
+    digits <-  ifelse(
+      measure.class == "factor",
+      stp25rndr::default_stp25("digits", "prozent"),
+      stp25rndr::default_stp25("digits", "mittelwert")
+    )
+  }
+  else{
+    nas <- which(is.na(digits))
+    digits[nas] <-
+      ifelse(
+        measure.class[nas] == "factor",
+        stp25rndr::default_stp25("digits", "prozent"),
+        stp25rndr::default_stp25("digits", "mittelwert")
+      )
+  }
+  names(digits) <- measure.vars
+  digits
+}
+
+#' Variablen als Nummer
+#' @noRd
+cleaup_names <- function(measure.vars, data) {
+  measure <- makeNamesNum(measure.vars, data)
+  
+  if (any(measure == "" | is.na(measure))) {
+    measure <- measure[measure != ""]
+    measure <- measure[!is.na(measure)]
+  }
+  
+  measure
+}
+

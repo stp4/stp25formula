@@ -7,7 +7,7 @@
 \usage{
 prepare_data2(...)
 
-\method{prepare_data2}{NULL}()
+\method{prepare_data2}{`NULL`}()
 }
 \value{
 Liste mit Namen und Daten

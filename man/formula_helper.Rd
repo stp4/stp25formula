@@ -15,7 +15,7 @@ clean_dots_formula(x, data = NULL, names_data = names(data))
 
 formula_split(x)
 
-make_formula(measurevar, groupvars)
+make_formula(measurevar, groupvars = NULL)
 
 check_data(data, vars = NULL)
 

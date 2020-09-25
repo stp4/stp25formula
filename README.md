@@ -20,7 +20,7 @@ dat <- data.frame(
 x <- stp25formula::prepare_data2( ~ m1 + m2 + m3 + m4, dat)
 str(x)
 #> List of 14
-#>  $ data           :Classes 'tbl_df', 'tbl' and 'data.frame': 2 obs. of  4 variables:
+#>  $ data           : tibble [2 x 4] (S3: tbl_df/tbl/data.frame)
 #>   ..$ m1: int [1:2] 1 2
 #>   ..$ m2: int [1:2] 1 2
 #>   ..$ m3: int [1:2] 1 2
@@ -49,7 +49,8 @@ str(x)
 #>   ..- attr(*, "names")= chr [1:4] "m1" "m2" "m3" "m4"
 #>  $ row_name       : Named chr [1:4] "m1" "m2" "m3" "m4"
 #>   ..- attr(*, "names")= chr [1:4] "m1" "m2" "m3" "m4"
-#>  $ col_name       : NULL
+#>  $ col_name       : Named chr(0) 
+#>   ..- attr(*, "names")= chr(0) 
 #>  $ measure.class  : Named chr [1:4] "integer" "integer" "integer" "integer"
 #>   ..- attr(*, "names")= chr [1:4] "m1" "m2" "m3" "m4"
 #>  $ group.class    : NULL
@@ -62,10 +63,9 @@ str(x)
 
 ``` r
 prepare_data2(dat, 2:5)
-#> [1] "treatment" "m1"        "m2"        "m3"
 #> 
 #> formula: ~treatment + m1 + m2 + m3
-#> <environment: 0x0000000015199150>
+#> <environment: 0x0000000014e628c8>
 #> 
 #> measure.vars:  treatment, m1, m2, m3
 #> measure:  integer, integer, integer, integer
@@ -84,11 +84,9 @@ prepare_data2(dat, 2:5)
 
 ``` r
 prepare_data2(dat, m1, m2, m3)
-#>                
-#> "m1" "m2" "m3"
 #> 
 #> formula: ~m1 + m2 + m3
-#> <environment: 0x00000000179fc938>
+#> <environment: 0x000000001388dde0>
 #> 
 #> measure.vars:  m1, m2, m3
 #> measure:  integer, integer, integer
@@ -135,7 +133,7 @@ Metainformation wie digits und Berechnungsmethoden bereitstellen
 prepare_data2( ~ m1[1] + m2 + m3[4, median] + m4, dat)
 #> 
 #> formula: ~m1 + m2 + m3 + m4
-#> <environment: 0x0000000019730160>
+#> <environment: 0x000000001662a470>
 #> 
 #> measure.vars:  m1, m2, m3, m4
 #> measure:  integer, integer, median, integer
@@ -152,11 +150,9 @@ prepare_data2( ~ m1[1] + m2 + m3[4, median] + m4, dat)
 #> 2     2     2     2     2
 
 prepare_data2(dat, m1[1, freq], m2[2, mean], m3[3, median])
-#>                                                 
-#>   "m1[1, freq]"   "m2[2, mean]" "m3[3, median]"
 #> 
 #> formula: ~m1 + m2 + m3
-#> <environment: 0x000000001a0993f0>
+#> <environment: 0x000000001584da80>
 #> 
 #> measure.vars:  m1, m2, m3
 #> measure:  freq, mean, median
@@ -187,7 +183,7 @@ prepare_data2(m1 ~ sex, dat)
 #> digits:  2
 #> row_name:  m1
 #> by: ~sex
-#> <environment: 0x000000001aa27258>
+#> <environment: 0x0000000012d8fdb8>
 #> 
 #> group.vars:  sex 
 #> # A tibble: 2 x 2
@@ -197,11 +193,9 @@ prepare_data2(m1 ~ sex, dat)
 #> 2     2     2
 
 prepare_data2(dat, m1, by = ~ sex, )
-#>      
-#> "m1"
 #> 
 #> formula: m1 ~ sex
-#> <environment: 0x0000000014bcdab8>
+#> <environment: 0x000000001c466418>
 #> 
 #> measure.vars:  m1
 #> measure:  integer
@@ -209,7 +203,7 @@ prepare_data2(dat, m1, by = ~ sex, )
 #> digits:  2
 #> row_name:  m1
 #> by: ~sex
-#> <environment: 0x0000000014baf640>
+#> <environment: 0x000000001c477848>
 #> 
 #> group.vars:  sex 
 #> # A tibble: 2 x 2
@@ -228,7 +222,7 @@ x
 #> digits:  2
 #> row_name:  m1
 #> by: ~sex
-#> <environment: 0x0000000017af2290>
+#> <environment: 0x000000001c8020b8>
 #> 
 #> group.vars:  sex 
 #> # A tibble: 2 x 3
