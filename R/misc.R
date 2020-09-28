@@ -96,25 +96,4 @@ get_classes <-
       setdiff(class(x), c("labelled", "ordered")))
   }
 
-#' stp25_stat_methode  
-#'
-#' in Tabelle verwendet
-#'
-#' @param x string
-#' @param mymet Meine Methoden
-#'
-#' @noRd
-stp25_stat_methode <- function(x,
-                               mymet = c("freq",
-                                         "mean",
-                                         "median",
-                                         "multiresponse",
-                                         "pie",
-                                         "dot",
-                                         "hist",
-                                         "box",
-                                         "bar"
-                                         
-                                         )) {
-  mymet[match(x, mymet)]
-}
+

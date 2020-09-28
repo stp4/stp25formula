@@ -102,6 +102,7 @@ prepare_data2.formula <-
       formula = fm$formula,
       by = fm$by,
       measure = fm$measure,
+      measure.test =fm$measure.test,
       row_name = lbl[fm$measure.vars],
       col_name = lbl[fm$group.vars],
       measure.class = fm$measure.class,
@@ -222,7 +223,7 @@ cleaup_formula <- function(formula, data, groups) {
   formula <- clean_dots_formula(formula, names_data = names(data))
   frml <- formula_split(formula)
   formula <- frml$formula
- 
+  dedect_string_test <- NULL
   
   if (any(all.names(formula[[2L]]) %in% '[')) {
     #  bei var[2,median] kommt der Median durch, error wegen  width.cutoff = 60L
@@ -232,6 +233,7 @@ cleaup_formula <- function(formula, data, groups) {
     
     measure.vars <- gsub("\\[.+\\]", "", y_hsd) # bereinigen von Klammern
     measure <- as.character(rep(NA, length(measure.vars)))
+    dedect_string_test <- measure
     digits <- as.integer(rep(NA, length(measure.vars)) )
     names(digits) <- measure.vars
     names(measure) <- measure.vars
@@ -241,11 +243,20 @@ cleaup_formula <- function(formula, data, groups) {
     # dedect_string afer ,  var[2,median]  gsub("[^[:alpha:]]", "", "var[2,median]")
     dedect_string <- gsub("[^[:alpha:]]", "",
                           stringr::str_extract(y_hsd[pos], "\\[.+"))
+    
+    dedect_test <- stp25_test_methode(dedect_string)
     # return:"mean"   "freq"   "median" NA
     dedect_string <- stp25_stat_methode(dedect_string) 
     
     dedect_number <- as.integer(gsub("[^0-9]", "",
                                      stringr::str_extract(y_hsd[pos], "\\[.+")))
+    
+    
+    if (!is.null(dedect_test)) {
+     for (i in  seq_len(length(pos)))
+        if (!is_empty2(dedect_test[i]))
+           dedect_string_test[pos[i]] <- dedect_test[i]
+    }
     
     if (!is_empty2(dedect_string)) {
       for (i in  seq_len(length(pos)))
@@ -258,6 +269,10 @@ cleaup_formula <- function(formula, data, groups) {
         if (!is_empty2(dedect_number[i]))
           digits[pos[i]] <- dedect_number[i]
     }
+    
+    
+    
+    
     
     if (length(formula) == 2) {
       formula <- to_formula(measure.vars, NULL)
@@ -307,6 +322,7 @@ cleaup_formula <- function(formula, data, groups) {
     group.vars = group.vars,
     condition.vars = condition.vars,
     measure = measure,
+    measure.test = which_test(measure, group.class[1], dedect_string_test),
     digits = digits,
     measure.class = measure.class,
     group.class = group.class,
@@ -317,6 +333,43 @@ cleaup_formula <- function(formula, data, groups) {
                      condition.vars, collapse="+"))))
   )
 }
+
+
+which_test <-
+  function(measure,
+           group.class,
+           measure.test = NULL,
+           # test = c("catTest", "conTest", "ordTest", "noTest", "corTest")
+           catTest = c("factor", "freq"),
+           conTest = c("numeric", "integer", "mean", "median")) {
+    rslt <-  sapply(measure, function(measure) {
+      if (is.null(group.class)) { "noTest"
+      }
+      else if (group.class == "factor") {
+        if (measure %in% catTest) "cattest"
+        else if (measure %in% conTest) "contest"
+        else
+          "notest"
+      } else if (group.class == "numeric") {
+        if (measure %in%  conTest) "cortest"
+        else  "notest"
+      } else "notest"
+    })
+    
+    if (!is.null(measure.test)) {
+      i <-  which(!is.na(measure.test))
+      rslt[i] <- measure.test[i]
+    }
+    rslt
+  }
+
+
+
+
+
+
+
+
 
 #' auswertungs Methode
 #' @noRd
