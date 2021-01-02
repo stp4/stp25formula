@@ -318,21 +318,21 @@ cleaup_formula <- function(formula, data, groups) {
   # clean measre 
   measure <- gsub("freq", "factor", measure)
   
+#' Texte also Überschfifte werden zu logical mit NA
+#' daher hie die Heder vergeben
+
+   if (any(measure == "logical")) {
+    logik <-  which(measure == "logical")
+    any_missing <-
+      sapply(data[measure.vars[logik]], function(x)
+        length(na.omit(x)))
   
-  
-  # if (any(measure == "logical")) {
-  #   logik <-  which(measure == "logical")
-  #   any_missing <-
-  #     sapply(data[measure.vars[logik]], function(x)
-  #       length(na.omit(x)))
-  #   
-  #   measure <-
-  #     ifelse(
-  #       measure  == "logical" & (any_missing == 0), 
-  #       "header", measure)
-  # }
-  
- 
+    measure[logik] <-
+      ifelse(
+        measure[logik]  == "logical" & (any_missing == 0),
+        "header", measure[logik])
+   }
+  # 
   list(
     formula = formula,
     by =   by,
