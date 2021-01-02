@@ -317,17 +317,20 @@ cleaup_formula <- function(formula, data, groups) {
  
   # clean measre 
   measure <- gsub("freq", "factor", measure)
-  if (any(measure == "logical")) {
-    logik <-  which(measure == "logical")
-    any_missing <-
-      sapply(data[measure.vars[logik]], function(x)
-        length(na.omit(x)))
-    
-    measure <-
-      ifelse(
-        measure[logik] == "logical" & (any_missing == 0), 
-        "header", measure)
-  }
+  
+  
+  
+  # if (any(measure == "logical")) {
+  #   logik <-  which(measure == "logical")
+  #   any_missing <-
+  #     sapply(data[measure.vars[logik]], function(x)
+  #       length(na.omit(x)))
+  #   
+  #   measure <-
+  #     ifelse(
+  #       measure  == "logical" & (any_missing == 0), 
+  #       "header", measure)
+  # }
   
  
   list(
