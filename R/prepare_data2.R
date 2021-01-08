@@ -353,15 +353,40 @@ cleaup_formula <- function(formula, data, groups) {
 }
 
 
+
+#' which_test
+#' 
+#' 
+#' @noRd
+#' @examples 
+#' which_test( "factor", NULL)
+#' which_test( "factor", "logical")
+#' which_test( "numeric", "factor")
+#' 
+#' which_test(c("median", "mean", "logical", "numeric", "multi"),
+#' "factor",
+#' c(NA, "ttest", NA, NA, NA))
+#' 
+#' c(
+#'   median = "contest" ,
+#'   mean = "ttest",
+#'   logical = "cattest" ,
+#'   numeric = "contest" ,
+#'   multi = "notest"
+#' )
+
 which_test <-
   function(measure,
-           group.class,
+           group.class=NULL,
            measure.test = NULL,
            # test = c("catTest", "conTest", "ordTest", "noTest", "corTest")
-           catTest = c("factor", "freq"),
-           conTest = c("numeric", "integer", "mean", "median")) {
+           catTest = c("factor", "freq", "logical"),
+           conTest = c("numeric", "integer", "mean", "median")
+           ) {
+    
+    #cat("\n m: ", measure,"\ng: ",group.class, "\nt: ", measure.test, "\n" )
     rslt <-  sapply(measure, function(measure) {
-      if (is.null(group.class)) { "noTest"
+      if (is.null(group.class)) { "notest"
       }
       else if (group.class == "factor") {
         if (measure %in% catTest) "cattest"
@@ -380,8 +405,6 @@ which_test <-
     }
     rslt
   }
-
-
 
 
 
@@ -417,7 +440,7 @@ default_digits <- function(digits, measure.vars, measure.class) {
     nas <- which(is.na(digits))
     digits[nas] <-
       ifelse(
-        measure.class[nas] == "factor",
+        measure.class[nas] %in% c("factor", "logical"),
         stp25rndr::default_stp25("digits", "prozent"),
         stp25rndr::default_stp25("digits", "mittelwert")
       )

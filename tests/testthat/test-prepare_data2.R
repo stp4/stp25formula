@@ -269,3 +269,24 @@ test_that("prepare_data2 formula and data.frame groups", {
                r4$digits)
   
 })
+
+
+
+test_that("which_test funktioniert", {
+  expect_equal(
+    which_test(
+      c("median", "mean", "logical", "numeric", "multi"),
+      "factor",
+      c(NA, "ttest", NA, NA, NA)
+    ),
+    
+    c(
+      median = "contest" ,
+      mean = "ttest",
+      logical = "cattest" ,
+      numeric = "contest" ,
+      multi = "notest"
+    )
+  )
+})
+

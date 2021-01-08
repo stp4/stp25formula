@@ -58,6 +58,7 @@ stp25_stat_methode <- function(x,
                                    "mean",
                                    "median",
                                    "multiresponse",
+                                   "multi",
                                    "pie",
                                    "dot",
                                    "hist",
@@ -66,27 +67,44 @@ stp25_stat_methode <- function(x,
                                  )) {
   stringr::str_extract(tolower(x), paste0(search_string, collapse = "|"))
 }
+
+
 stp25_test_methode <- function(x,
-                                 search_string =
-                                   c("contest",
-                                     "cattest",
-                                     "ordtest",
-                                     "notest",
-                                     "spearman2",
-                                     "chisq",
-                                     "fisher",
-                                     "wilcox",
-                                     "utest",
-                                     "htest",
-                                     "kruskal",
-                                     "ttest",
-                                     "aov",
-                                     "anova",
-                                     "hmisc"
-                                   )) {
-   rslt <- stringr::str_extract(tolower(x), paste0(search_string, collapse = "|"))
-   if(all(is.na(rslt))) NULL else rslt
-  }
+                               search_string = stp25stat:::stattest) {
+  rslt <-
+    stringr::str_extract(tolower(x), paste0(search_string, collapse = "|"))
+  if (all(is.na(rslt)))
+    NULL
+  else
+    rslt
+}
+
+
+
+# stp25_test_methode <- function(x,
+#                                search_string =
+#                                  c("contest",
+#                                    "cattest",
+#                                    "ordtest",
+#                                    "notest",
+#                                    "spearman2",
+#                                    "chisq",
+#                                    "fisher",
+#                                    "wilcox",
+#                                    "utest",
+#                                    "htest",
+#                                    "kruskal",
+#                                    "ttest",
+#                                    "aov",
+#                                    "anova",
+#                                    "hmisc"
+#                                  )
+#                                
+# ) {
+#   rslt <- stringr::str_extract(tolower(x), paste0(search_string, collapse = "|"))
+#   if(all(is.na(rslt))) NULL else rslt
+# }
+
 
 # stat_methode("mean")
 # stat_methode("mean, wilcox")
