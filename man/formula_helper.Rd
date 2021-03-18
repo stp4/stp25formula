@@ -85,7 +85,7 @@ check_data(dat, c("m1", "m2") )
 check_data(dat, c("m1", "sex") )
 
 
-  measure <- c("geschl", "1" , "3:5", 1)
-  stp25formula:::makeNamesNum(measure,  data=dat)
+#  measure <- c("geschl", "1" , "3:5", 1)
+#  stp25formula:::makeNamesNum(measure,  data=dat)
 
 }

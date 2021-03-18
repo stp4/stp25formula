@@ -46,8 +46,8 @@ check_data <- function (data,
 #' @return   string( )
 #' @examples
 #'
-#'   measure <- c("geschl", "1" , "3:5", 1)
-#'   stp25formula:::makeNamesNum(measure,  data=dat)
+#' #  measure <- c("geschl", "1" , "3:5", 1)
+#' #  stp25formula:::makeNamesNum(measure,  data=dat)
 #'
 makeNamesNum <- function(measure,
                          data,

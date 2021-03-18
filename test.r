@@ -1,5 +1,5 @@
 #
 # 
-usethis::use_test("check_data")
+# usethis::use_test("check_data")
 # remove.packages("stp25formula", lib="~/R/win-library/3.5")
-#lintr::lint_package()
+# lintr::lint_package()
