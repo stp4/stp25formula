@@ -147,11 +147,12 @@ prepare_data2.data.frame <- function(data,
     })
 
   if( !is.null(sub_haeding ) ){
-    i<- length(sub_haeding)
-    nn <- ncol(data)
-    data[ paste0(hsub, seq_along(i), hend) ] <- NA
+    #i<- length(sub_haeding)
     
-    for (n in seq_along(i))
+    nn <- ncol(data)
+    data[ paste0(hsub, seq_along(sub_haeding), hend) ] <- NA
+    
+    for (n in seq_along(sub_haeding))
       attr(data[[n+nn]], "label") <- sub_haeding [[n]]
   }
   
@@ -160,11 +161,12 @@ prepare_data2.data.frame <- function(data,
   # Fehlercheck
   if (length(setdiff(measure.vars, names(data))) > 0) {
     missing_measure.vars <- setdiff(measure.vars, names(data))
-    i <- length(missing_measure.vars)
+  #  i <- length(missing_measure.vars)
+    
     nn <- ncol(data)
     data[missing_measure.vars] <- NA
 
-    for (n in seq_along(i))
+    for (n in seq_along(missing_measure.vars))
       attr(data[[n + nn]], "label") <- paste("Error:", missing_measure.vars[n], "dose not exist!")
   }
 
