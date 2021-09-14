@@ -382,17 +382,18 @@ which_test <-
            group.class=NULL,
            measure.test = NULL,
            # test = c("catTest", "conTest", "ordTest", "noTest", "corTest")
-           catTest = c("factor", "freq", "logical"),
+           catTest = c("factor", "freq", "logical", "multi"),
            conTest = c("numeric", "integer", "mean", "median")
            ) {
     
-    #cat("\n m: ", measure,"\ng: ",group.class, "\nt: ", measure.test, "\n" )
+  #  cat("\n m: ", measure,"\ng: ",group.class, "\nt: ", measure.test, "\n" )
     rslt <-  sapply(measure, function(measure) {
       if (is.null(group.class)) { "notest"
       }
       else if (group.class == "factor") {
         if (measure %in% catTest) "cattest"
         else if (measure %in% conTest) "contest"
+        
         else
           "notest"
       } else if (group.class == "numeric") {
